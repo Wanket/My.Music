@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">my.music</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="add_music">Добавить музыку</string>
+    <string name="my_playlists">Мои плейлисты</string>
+    <string name="music_added_successfully">Музыка успешно добавлена</string>
+    <string name="music_added_other_error">Неизвестная ошибка при добавлении музыки</string>
+    <string name="music_already_exist">Музыка уже была добавлена ранее</string>
+    <string name="more_points">…</string>
+    <string name="music_deleted_successfully">Музыка успешно удалена</string>
+    <string name="music_deleted_other_error">Неизвестная ошибка при удалении музыки</string>
+</resources>
