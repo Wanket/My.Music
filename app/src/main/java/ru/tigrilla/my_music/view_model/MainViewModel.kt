@@ -62,7 +62,7 @@ class MainViewModel @Inject constructor(
 
         val name = metadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE).let {
             if (it.isNullOrEmpty()) {
-                filename
+                filename.removeSuffix(".mp3")
             } else {
                 it
             }
@@ -79,6 +79,7 @@ class MainViewModel @Inject constructor(
         val genre = metadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE)
         val bitrate = metadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE)
             ?.toIntOrNull()
+        val fileSize = fileDescriptor.parcelFileDescriptor.statSize
 
         if (musicRepository.checkTrackExist(name, author)) {
             return AddMusicStatus.ALREADY_EXIST
@@ -101,6 +102,7 @@ class MainViewModel @Inject constructor(
                 genre,
                 bitrate,
                 newFilename,
+                fileSize,
                 LocalDateTime.now(),
             )
         )

@@ -9,4 +9,12 @@
     <string name="more_points">…</string>
     <string name="music_deleted_successfully">Музыка успешно удалена</string>
     <string name="music_deleted_other_error">Неизвестная ошибка при удалении музыки</string>
+    <string name="duration">Продолжительность</string>
+    <string name="file_size">Размер файла</string>
+    <string name="genre">Жанр</string>
+    <string name="bitrate">Скорость потока</string>
+    <string name="track_info">Информация о треке</string>
+    <string name="track_name">Название трека</string>
+    <string name="author">Исполнитель</string>
+    <string name="release_year">Год выпуска</string>
 </resources>

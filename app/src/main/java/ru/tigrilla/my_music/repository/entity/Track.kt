@@ -2,6 +2,7 @@ package ru.tigrilla.my_music.repository.entity
 
 import androidx.room.Entity
 import androidx.room.Index
+import java.io.Serializable
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -14,5 +15,6 @@ data class Track(
     val genre: String?,
     val bitrate: Int?,
     val fileName: String,
+    val fileSize: Long,
     val lastUse: LocalDateTime?
-)
+): Serializable

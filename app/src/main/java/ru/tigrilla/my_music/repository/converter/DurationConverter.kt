@@ -5,7 +5,7 @@ import java.time.Duration
 
 class DurationConverter {
     @TypeConverter
-    fun fromInt(seconds: Long?) = seconds?.let {
+    fun fromLong(seconds: Long?) = seconds?.let {
         Duration.ofSeconds(it)
     }
 
