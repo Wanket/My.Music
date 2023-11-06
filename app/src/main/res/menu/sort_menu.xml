@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_track_name"
+        android:title="@string/track_name" />
+    <item
+        android:id="@+id/menu_author"
+        android:title="@string/author" />
+    <item
+        android:id="@+id/menu_year"
+        android:title="@string/release_year" />
+    <item
+        android:id="@+id/menu_genre"
+        android:title="@string/genre" />
+    <item
+        android:id="@+id/menu_last_use"
+        android:title="@string/last_use" />
+</menu>

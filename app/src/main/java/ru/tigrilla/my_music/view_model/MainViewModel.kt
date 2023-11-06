@@ -2,6 +2,8 @@ package ru.tigrilla.my_music.view_model
 
 import android.content.res.AssetFileDescriptor
 import android.media.MediaMetadataRetriever
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,14 +11,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.tigrilla.my_music.repository.MusicRepository
 import ru.tigrilla.my_music.repository.entity.Track
 import java.io.File
 import java.time.Duration
 import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.util.TimeZone
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
@@ -26,6 +29,14 @@ import kotlin.coroutines.coroutineContext
 class MainViewModel @Inject constructor(
     private val musicRepository: MusicRepository
 ) : ViewModel() {
+    enum class SortType(val field: String) {
+        TRACK_NAME(Track::name.name),
+        AUTHOR(Track::author.name),
+        RELEASE_YEAR(Track::year.name),
+        GENRE(Track::genre.name),
+        LAST_USE(Track::lastUse.name),
+    }
+
     enum class AddMusicStatus {
         SUCCESS,
         ALREADY_EXIST,
@@ -37,7 +48,35 @@ class MainViewModel @Inject constructor(
         OTHER_ERROR,
     }
 
-    val tracks = musicRepository.allTracksOrderByLastUse().asLiveData()
+    private var tracksMutable = MutableLiveData<List<Track>>()
+
+    val tracks: LiveData<List<Track>> = tracksMutable
+
+    init {
+        musicRepository.allTracksOrderByLastUse().runOnLiveData(viewModelScope, tracksMutable)
+    }
+
+    fun sortMusic(type: SortType) = viewModelScope.launch {
+        tracksMutable.value = tracks.value?.sortByType(type)
+    }
+
+    private fun List<Track>.sortByType(type: SortType) = when (type) {
+        SortType.TRACK_NAME -> sortedBy { it.name }
+        SortType.AUTHOR -> sortedBy { it.author }
+        SortType.RELEASE_YEAR -> sortedBy { it.year ?: 0 }
+        SortType.GENRE -> sortedBy { it.genre ?: "" }
+        SortType.LAST_USE -> sortedBy { it.lastUse?.toEpochSecond(ZoneOffset.UTC) ?: 0 }
+    }
+
+    fun mixMusic() = viewModelScope.launch(Dispatchers.IO) {
+        tracks.value?.shuffled()?.mapIndexed { index, track ->
+            track.lastUse = LocalDateTime.ofEpochSecond(index.toLong(), 0, ZoneOffset.UTC)
+
+            return@mapIndexed track
+        }?.let {
+            musicRepository.updateTracks(it)
+        }
+    }
 
     suspend fun addMusic(
         musicDir: File,

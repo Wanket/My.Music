@@ -16,5 +16,5 @@ data class Track(
     val bitrate: Int?,
     val fileName: String,
     val fileSize: Long,
-    val lastUse: LocalDateTime?
+    var lastUse: LocalDateTime?
 ): Serializable

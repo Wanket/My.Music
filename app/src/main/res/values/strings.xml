@@ -17,4 +17,5 @@
     <string name="track_name">Название трека</string>
     <string name="author">Исполнитель</string>
     <string name="release_year">Год выпуска</string>
+    <string name="last_use">Последнему использованию</string>
 </resources>

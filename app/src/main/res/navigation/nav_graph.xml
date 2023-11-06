@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_mainFragment_to_infoFragment"
             app:destination="@id/infoFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_playFragment"
+            app:destination="@id/playFragment" />
     </fragment>
 
     <fragment
@@ -20,6 +23,16 @@
         android:name="ru.tigrilla.my_music.fragment.InfoFragment"
         android:label="InfoFragment"
         tools:layout="@layout/info_fragment">
+        <argument
+            android:name="track"
+            app:argType="ru.tigrilla.my_music.repository.entity.Track" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/playFragment"
+        android:name="ru.tigrilla.my_music.fragment.TrackFragment"
+        android:label="PlayFragment"
+        tools:layout="@layout/music_play_fragment">
         <argument
             android:name="track"
             app:argType="ru.tigrilla.my_music.repository.entity.Track" />
