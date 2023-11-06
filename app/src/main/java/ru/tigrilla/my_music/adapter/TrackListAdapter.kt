@@ -40,6 +40,15 @@ class TrackListAdapter : ListAdapter<Track, TrackListAdapter.TrackViewHolder>(Tr
                 it.findNavController()
                     .navigate(MainFragmentDirections.actionMainFragmentToInfoFragment(current))
             }
+
+            root.setOnClickListener {
+                it.findNavController().navigate(
+                    MainFragmentDirections.actionMainFragmentToPlayFragment(
+                        currentList.toTypedArray(),
+                        position
+                    )
+                )
+            }
         }
     }
 

@@ -18,4 +18,7 @@
     <string name="author">Исполнитель</string>
     <string name="release_year">Год выпуска</string>
     <string name="last_use">Последнему использованию</string>
+    <string name="mix">Перемешать</string>
+    <string name="repeat_off">🔁</string>
+    <string name="repeat_on">🔂</string>
 </resources>

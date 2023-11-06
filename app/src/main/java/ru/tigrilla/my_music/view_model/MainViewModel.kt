@@ -5,13 +5,11 @@ import android.media.MediaMetadataRetriever
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.tigrilla.my_music.repository.MusicRepository
 import ru.tigrilla.my_music.repository.entity.Track
@@ -19,7 +17,6 @@ import java.io.File
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.util.TimeZone
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
@@ -29,12 +26,12 @@ import kotlin.coroutines.coroutineContext
 class MainViewModel @Inject constructor(
     private val musicRepository: MusicRepository
 ) : ViewModel() {
-    enum class SortType(val field: String) {
-        TRACK_NAME(Track::name.name),
-        AUTHOR(Track::author.name),
-        RELEASE_YEAR(Track::year.name),
-        GENRE(Track::genre.name),
-        LAST_USE(Track::lastUse.name),
+    enum class SortType {
+        TRACK_NAME,
+        AUTHOR,
+        RELEASE_YEAR,
+        GENRE,
+        LAST_USE,
     }
 
     enum class AddMusicStatus {
@@ -85,9 +82,7 @@ class MainViewModel @Inject constructor(
     ) = viewModelScope.async(coroutineContext, CoroutineStart.UNDISPATCHED) {
         runCatching {
             addMusicImpl(musicDir, filename, fileDescriptor)
-        }.getOrElse {
-            AddMusicStatus.OTHER_ERROR
-        }
+        }.getOrDefault(AddMusicStatus.OTHER_ERROR)
     }
 
     private suspend fun addMusicImpl(
@@ -157,8 +152,6 @@ class MainViewModel @Inject constructor(
             db.await()
 
             return@runCatching if (file.await()) DeleteMusicStatus.SUCCESS else DeleteMusicStatus.OTHER_ERROR
-        }.getOrElse {
-            DeleteMusicStatus.OTHER_ERROR
-        }
+        }.getOrDefault(DeleteMusicStatus.OTHER_ERROR)
     }
 }

@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="ru.tigrilla.my_music.view_model.PlayViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <SeekBar
-            android:id="@+id/seekBar"
+            android:id="@+id/musicSeekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
+            android:max="@{(int)viewModel.duration.seconds}"
+            android:progress="@{(int)viewModel.currentDuration.seconds}"
+            android:enabled="@{viewModel.enabled}"
             app:layout_constraintEnd_toStartOf="@+id/textView29"
             app:layout_constraintStart_toEndOf="@+id/textView28"
             app:layout_constraintTop_toBottomOf="@+id/imageButtonPlayStopMusic" />
@@ -23,10 +32,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="TextView"
-            app:layout_constraintBottom_toBottomOf="@+id/seekBar"
+            android:text="@{viewModel.formatDuration(viewModel.duration)}"
+            app:layout_constraintBottom_toBottomOf="@+id/musicSeekBar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/seekBar" />
+            app:layout_constraintTop_toTopOf="@+id/musicSeekBar" />
 
         <ImageButton
             android:id="@+id/imageButtonNextMusic"
@@ -34,6 +43,7 @@
             android:layout_height="33dp"
             android:layout_marginStart="8dp"
             android:src="@android:drawable/ic_media_ff"
+            android:enabled="@{viewModel.enabled}"
             app:layout_constraintBottom_toBottomOf="@+id/imageButtonPlayStopMusic"
             app:layout_constraintStart_toEndOf="@+id/imageButtonPlayStopMusic"
             app:layout_constraintTop_toTopOf="@+id/imageButtonPlayStopMusic" />
@@ -43,7 +53,8 @@
             android:layout_width="33dp"
             android:layout_height="33dp"
             android:layout_marginTop="32dp"
-            android:src="@android:drawable/ic_media_play"
+            android:src="@{viewModel.playing ? @android:drawable/ic_media_pause : @android:drawable/ic_media_play}"
+            android:enabled="@{viewModel.enabled}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView31" />
@@ -54,6 +65,7 @@
             android:layout_height="33dp"
             android:layout_marginEnd="8dp"
             android:src="@android:drawable/ic_media_rew"
+            android:enabled="@{viewModel.enabled}"
             app:layout_constraintBottom_toBottomOf="@+id/imageButtonPlayStopMusic"
             app:layout_constraintEnd_toStartOf="@+id/imageButtonPlayStopMusic"
             app:layout_constraintTop_toTopOf="@+id/imageButtonPlayStopMusic" />
@@ -63,18 +75,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="TextView"
-            app:layout_constraintBottom_toBottomOf="@+id/seekBar"
+            android:text="@{viewModel.formatDuration(viewModel.currentDuration)}"
+            app:layout_constraintBottom_toBottomOf="@+id/musicSeekBar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/seekBar"
+            app:layout_constraintTop_toTopOf="@+id/musicSeekBar"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/textView32"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:text="Исполнитель"
+            android:layout_marginEnd="8dp"
+            android:text="@{viewModel.enabled ? viewModel.tracks[viewModel.selectedPos].author : ``}"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/space5"
@@ -82,10 +96,12 @@
 
         <TextView
             android:id="@+id/textView31"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:text="Название песни"
+            android:layout_marginEnd="8dp"
+            android:text="@{viewModel.enabled ? viewModel.tracks[viewModel.selectedPos].name : ``}"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/space5"
             app:layout_constraintStart_toStartOf="parent"
@@ -95,9 +111,10 @@
             android:id="@+id/space5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="60dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -107,7 +124,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/seekBar">
+            app:layout_constraintTop_toBottomOf="@+id/musicSeekBar">
 
             <Space
                 android:layout_width="wrap_content"
@@ -118,6 +135,7 @@
                 android:id="@+id/imageButtonTrash"
                 android:layout_width="33dp"
                 android:layout_height="33dp"
+                android:enabled="@{viewModel.enabled}"
                 android:src="@android:drawable/ic_menu_delete" />
 
             <Space
@@ -126,22 +144,27 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/buttonDitails"
+                android:id="@+id/buttonDetails"
                 android:layout_width="33dp"
                 android:layout_height="33dp"
-                android:text="..."
-                android:textSize="10sp" />
+                android:textSize="12sp"
+                android:enabled="@{viewModel.enabled}"
+                android:text="@string/more_points" />
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <ImageButton
-                android:id="@+id/imageButtonReplay"
-                android:layout_width="33dp"
-                android:layout_height="33dp"
-                android:src="@android:drawable/ic_popup_sync" />
+            <ToggleButton
+                android:id="@+id/toggleButton"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_weight="1"
+                android:checked="@={viewModel.repeatEnabled}"
+                android:textOff="@string/repeat_off"
+                android:textOn="@string/repeat_on"
+                android:enabled="@{viewModel.enabled}"/>
 
             <Space
                 android:layout_width="wrap_content"
@@ -152,7 +175,8 @@
                 android:id="@+id/buttonMix"
                 android:layout_width="105dp"
                 android:layout_height="38dp"
-                android:text="Перемешать"
+                android:text="@string/mix"
+                android:enabled="@{viewModel.enabled}"
                 android:textSize="11sp" />
 
             <Space

@@ -30,12 +30,18 @@
 
     <fragment
         android:id="@+id/playFragment"
-        android:name="ru.tigrilla.my_music.fragment.TrackFragment"
+        android:name="ru.tigrilla.my_music.fragment.PlayFragment"
         android:label="PlayFragment"
         tools:layout="@layout/music_play_fragment">
         <argument
-            android:name="track"
-            app:argType="ru.tigrilla.my_music.repository.entity.Track" />
+            android:name="tracks"
+            app:argType="ru.tigrilla.my_music.repository.entity.Track[]" />
+        <argument
+            android:name="selectedInx"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_playFragment_to_infoFragment"
+            app:destination="@id/infoFragment" />
     </fragment>
 
 </navigation>
