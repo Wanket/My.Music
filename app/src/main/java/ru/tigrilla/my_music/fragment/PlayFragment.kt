@@ -24,7 +24,6 @@ import ru.tigrilla.my_music.R
 import ru.tigrilla.my_music.databinding.MusicPlayFragmentBinding
 import ru.tigrilla.my_music.view_model.PlayViewModel
 import java.io.File
-import java.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
@@ -49,8 +48,8 @@ class PlayFragment : Fragment() {
         player.apply {
             setOnCompletionListener { viewModel.next() }
             setOnPreparedListener {
-                viewModel.duration.postValue(player.duration.milliseconds.toJavaDuration())
                 start()
+                viewModel.duration.postValue(duration.milliseconds.toJavaDuration())
             }
         }
     }
@@ -182,7 +181,7 @@ class PlayFragment : Fragment() {
         player.apply {
             reset()
             setDataSource(File(requireContext().filesDir, fileName).path)
-            prepareAsync()
+            prepare()
         }
     }
 
